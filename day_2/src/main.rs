@@ -12,9 +12,9 @@ fn part_1(){
     let mut depth =0;
     let mut horizontal = 0;
     for item in split {
-        let mut dir_L = item.split(" ");
-        let dir = dir_L.next().unwrap();
-        let x: i32 = dir_L.next().as_mut().unwrap().parse().unwrap();
+        let mut dir_l = item.split(" ");
+        let dir = dir_l.next().unwrap();
+        let x: i32 = dir_l.next().as_mut().unwrap().parse().unwrap();
 
         if dir == "forward" {
           horizontal = horizontal + x;
@@ -38,9 +38,9 @@ fn part_2(){
   let mut horizontal = 0;
   let mut aim = 0;
   for item in split {
-      let mut dir_L = item.split(" ");
-      let dir = dir_L.next().unwrap();
-      let x: i32 = dir_L.next().as_mut().unwrap().parse().unwrap();
+      let dir_l = item.split(" ").collect::<Vec<&str>>();
+      let dir:&str = dir_l[0];
+      let x: i32 = dir_l[1].parse().unwrap();
 
       if dir == "forward" {
         horizontal = horizontal + x;
