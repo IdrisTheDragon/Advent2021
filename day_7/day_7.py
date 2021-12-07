@@ -1,4 +1,4 @@
-
+from functools import lru_cache
 
 file = open("input.txt","r")
 
@@ -13,6 +13,7 @@ def costto(num,crabs):
         sum = sum + abs(s)
     return sum
 
+@lru_cache(maxsize=2000)
 def coststeps(steps):
     # sum = 0
     # for i in range(1,steps+1):
