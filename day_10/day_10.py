@@ -6,6 +6,7 @@ file = open("input.txt", "r")
 o = {')':'(',']':'[','}':'{','>':'<'}
 points = {')':3,']':57,'}':1197,'>':25137}
 points2 = {'(':1,'[':2,'{':3,'<':4}
+
 def validate(l):
     op = Stack()
     for x in l:
@@ -27,6 +28,7 @@ for l in file:
         # part 1
         sum = sum + points[x]
     elif isinstance(x,Stack):
+        # part 2
         s = 0
         while not x.isEmpty():
             t = x.pop()
