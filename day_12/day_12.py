@@ -21,7 +21,7 @@ def load_nodes(file):
 def isCaps(text):
     return text != text.lower()    
 
-def process_node(nodes,curNode,prevNodes):
+def process_node(nodes,curNode="start",prevNodes=[],p2=False,little=None):
     paths = []
     prevNodes.append(curNode)
     for n in nodes[curNode]:
@@ -30,34 +30,13 @@ def process_node(nodes,curNode,prevNodes):
         elif n == "start":
             pass
         elif isCaps(n):
-            paths = paths + process_node(nodes,n,prevNodes.copy())
+            paths = paths + process_node(nodes,n,prevNodes.copy(),p2,little)
         else:
             if n in prevNodes:
-                pass
+                if p2 and little == None:
+                    paths = paths + process_node(nodes,n,prevNodes.copy(),p2,n)
             else:
-                paths = paths + process_node(nodes,n,prevNodes.copy())
-    temp = []
-    for p in paths:
-        temp.append([curNode]+p)
-    return temp
-
-
-def process_node_2(nodes,curNode,prevNodes,little):
-    paths = []
-    prevNodes.append(curNode)
-    for n in nodes[curNode]:
-        if n == "end":
-            paths.append(["end"])
-        elif n == "start":
-            pass
-        elif isCaps(n):
-            paths = paths + process_node_2(nodes,n,prevNodes.copy(),little)
-        else:
-            if n in prevNodes:
-                if little == None:
-                    paths = paths + process_node_2(nodes,n,prevNodes.copy(),n)
-            else:
-                paths = paths + process_node_2(nodes,n,prevNodes.copy(),little)
+                paths = paths + process_node(nodes,n,prevNodes.copy(),p2,little)
     temp = []
     for p in paths:
         temp.append([curNode]+p)
@@ -67,8 +46,12 @@ def process_node_2(nodes,curNode,prevNodes,little):
 
 file = open("input.txt","r")
 nodes = load_nodes(file)
-#print(nodes)
-paths = process_node_2(nodes,"start",[],None)
-print(paths)
+# print(nodes)
+paths = process_node(nodes)
+# print(paths)
+print(len(paths))
+
+paths = process_node(nodes,p2=True)
+# print(paths)
 print(len(paths))
 
