@@ -1,6 +1,6 @@
 
-
 file = open("input.txt","r")
+# file = open("input25.txt","r") ## reddit https://www.reddit.com/r/adventofcode/comments/rfeuic/2021_day_13_part_25_what_if_it_would_be_more/
 
 grid = []
 folds = []
@@ -14,8 +14,8 @@ for l in file:
     else:
         s = l[11:-1].split("=")
         folds.append((s[0],int(s[1])))
-print(grid)
-print(folds)
+#print(grid)
+#print(folds)
 
 def fold(f,grid):
     temp = []
@@ -40,7 +40,7 @@ def fold(f,grid):
 
 grid1 = fold(folds[0],grid)
 unique = set(grid1)
-print(unique)
+#print(unique)
 print(len(unique))
 
 for f in folds:
@@ -59,7 +59,7 @@ y = list(map(get_y,grid))
 maxX = max(x)
 maxY = max(y)
 
-printGrid = [["." for i in range(maxX+1)] for j in range(maxY+1)]
+printGrid = [[" " for i in range(maxX+1)] for j in range(maxY+1)]
 
 for c in grid:
     printGrid[c[1]][c[0]] = "#"
