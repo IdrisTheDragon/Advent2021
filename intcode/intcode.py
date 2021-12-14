@@ -1,3 +1,4 @@
+
 def add(a,b):
     return a + b
 def multiply(a,b):
@@ -27,7 +28,7 @@ class Intcode:
 
     def int_input(self):
         return self.input.pop()
-        
+
     def output_int(self,a):
         self.output.append(a)
     
