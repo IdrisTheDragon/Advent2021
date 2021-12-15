@@ -1,3 +1,7 @@
+import time
+
+start = time.time()
+
 
 file = open("input.txt","r")
 
@@ -6,6 +10,8 @@ grid = []
 for l in file:
     grid.append(list(map(int,l[:-1])))
 
+end = time.time()
+print("load data",end - start)
 #print(grid)
 
 dir = [(1,0),(0,1),(-1,0),(0,-1)]
@@ -59,11 +65,17 @@ def star_search(grid,start,end):
                     came_from[(x1,y1)] = (x,y)
     return came_from, cost_so_far
 
+start = time.time()
 end  = (len(grid[0])-1,len(grid)-1)
 came_from, cost_so_far = star_search(grid,(0,0),end)
 #print(cost_so_far)
 cost = cost_so_far[end]
 print(cost)  
+
+end = time.time()
+print("part1",end - start)
+
+start = time.time()
 
 def increment(x):
     x = x + 1
@@ -84,6 +96,8 @@ for row in m1_5:
     m4 = [increment(v) for v in m3]
     m5 = [increment(v) for v in m4]
     grid.append(row + m2 + m3 + m4 + m5)
+end = time.time()
+print("part2 - assemble grid",end - start)
 
 # for r in grid:
 #     o = ""
@@ -91,6 +105,7 @@ for row in m1_5:
 #         o = o + str(x)
 #     print(o)
 
+start = time.time()
 
 end  = (len(grid[0])-1,len(grid)-1)
 came_from, cost_so_far = star_search(grid,(0,0),end)
@@ -98,3 +113,5 @@ came_from, cost_so_far = star_search(grid,(0,0),end)
 cost = cost_so_far[end]
 print(cost)  
 
+end = time.time()
+print("part2",end - start)
