@@ -3,85 +3,111 @@ from math import ceil,floor
 def l2s(l):
     o = ''
     for x in l:
-        o +=x
+        o += str(x)
     return o
 
-def new_num(n):
-    if n < 10:
-        return str(n)
-    else:
-        l = floor(n/2)
-        r = ceil(n/2)
-        return ['[' ,str(l) ,',' , str(r) , ']']
 
-def process_once(num):
+def new_num(n):
+    l = floor(n/2)
+    r = ceil(n/2)
+    return ['[' ,l,',' , r, ']']
+
+
+def s2l(l):
+    o = []
+    for x in l:
+        if x.isnumeric():
+            x = int(x)
+        o.append(x)
+    return o
+
+def add(num1,num2):
+    return ['['] + num1 + [','] + num2 + [']']
+
+def explode_node(num,i):
+    #print(l2s(num))
+    #print('should always be "[":',num[i-1])
+    j = i+2
+    #print(num[i],num[i+1],num[i+2],num[i+3])
+    #print(num[i-1:i+4])
+    r = num[j]
+    j+=1
+    while j < len(num) and not isinstance(num[j],int):
+        j+=1
+    # print('jr',r,j,num[j])
+    if j < len(num):
+        #print(num[j],r)
+        newr = num[j] + r
+        num[j] = newr
+    # print(l2s(num))
+    j = i
+    l = num[j]
+    j-=1
+    while j >= 0 and not isinstance(num[j],int):
+        j-=1
+    #print('jl',l,j,num[j])
+    newl = ''
+    if j > 0:
+        #print(num[j],l)
+        newl = num[j] + l
+        num[j] = newl
+    # print(l2s(num))
+    ls = num[:i-1] 
+    rs = num[i+4:]
+    num = ls + [0] + rs
+    # print(l2s(ls),":",l2s(rs))
+    return True, num
+
+def explode_once(num):
     i = 1
     depth = 0
     while i < len(num):
-        print(i,num[i])
-        if depth == 4:
-            j = i+2
-            print(num[i],num[i+1],num[i+2],num[i+3])
-            r = int(num[j])
-            j+=1
-            while j < len(num) and not num[j].isnumeric():
-                j+=1
-            # print('jr',r,j,num[j])
-            if j < len(num):
-                newr = new_num(int(num[j]) + r)
-                if len(newr) == 1:
-                    num[j] = newr
-                else:
-                    num = num[:j] + newr + num[j+1:]
-            # print(l2s(num))
-            j = i
-            l = int(num[j])
-            j-=1
-            while j >= 0 and not num[j].isnumeric():
-                j-=1
-            #print('jl',l,j,num[j])
-            newl = ''
-            if j > 0:
-                newl = new_num(int(num[j]) + l)
-                if len(newl) == 1:
-                    num[j] = newl
-                else:
-                    num = num[:j] + newl + num[j+1:]
-                    i += 4
-            # print(l2s(num))
-            ls = num[:i-1] 
-            rs = num[i+4:]
-            num = ls + ['0'] + rs
-            # print(l2s(ls),":",l2s(rs))
-            return True, num
-        elif num[i] == '[':
+        #print(i,num[i])
+        if num[i] == '[':
             depth += 1
         elif num[i] == ']':
+            
+            if depth >= 4: # first top level node
+                return explode_node(num,i-3)
             depth -= 1
         else:
             pass
         i+=1
     return False,num
 
-def add(num1,num2):
-    return '[' + num1 + ',' + num2 + ']'
+
+def split(num):
+    i = 0
+    while i < len(num)-1:
+        i+=1
+        if isinstance(num[i],int):
+            if num[i] > 9:
+                new = new_num(num[i])
+                num = num[:i] + new + num[i+1:]
+    return num
+
 
 def process_fully(num):
     work = True
-    num = list(num)
     while work:
         #print(l2s(num),'m')
-        work,num = process_once(num)
-    return l2s(num)
+        work,num = explode_once(num)
+        # print(l2s(num),"post explode")
+        if work:
+            num = split(num)
+            # print(l2s(num), "post split")
+    return num
+
 
 def repeated_add(filename):
     file = open(filename,"r")
 
     num = file.readline()[:-1]
-    num = process_fully(num)
+    num = s2l(num)
     for l in file:
         l = l[:-1]
-        l = process_fully(l)
+        l = s2l(l)
+        # print(l,num)
         num = add(num,l)
         num = process_fully(num)
     return num
@@ -110,7 +136,7 @@ tests_add = [
 def tester():
     for t in tests:
         print('Test:',t[0])
-        num = t[0]
+        num = s2l(t[0])
         numr = t[1]
         num = process_fully(num)
         if l2s(num) != numr:
@@ -136,18 +162,21 @@ def tester2():
         print("Test",i)
         l = l[:-1]
         s = l.split('+')
-        num = s[0]
+        num = s2l(s[0])
         s = s[1].split('=')
-        num2 = s[0]
+        num2 = s2l(s[0])
         numr = s[1]
         num = add(num,num2)
         num = process_fully(num)
         if l2s(num) != numr:
-            print('\nresult:', l2s(num), '\nactual:',numr)
+            print('result:', l2s(num), '\nactual:',numr)
         else:
             print('\tPass')
 
 
+def main():
+    tester()
+    #tester2()
 
-#tester()
-tester2()
+if __name__ == "__main__":
+    main()
